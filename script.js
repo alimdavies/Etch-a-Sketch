@@ -1,5 +1,6 @@
 const container = document.querySelector('#container')
 const editBtn = document.querySelector('#editBtn')
+const cleanBtn = document.querySelector('#cleanBtn')
 
 const r = document.querySelector(':root')
 const START_NUMBER_OF_SQUARES = getComputedStyle(r).getPropertyValue('--n')
@@ -21,6 +22,28 @@ function createGrid(n) {
     }
 }
 
+function cleanGrid() {
+    const childrenLength = container.children.length
+    for(let i = 0; i < childrenLength; i++) {
+        container.children[i].style.backgroundColor = 'rgba(0, 0, 0, 0)'
+        container.children[i].style.opacity = '0'
+    }
+}
+
+function editGrid() {
+    const currentNum = getComputedStyle(r).getPropertyValue('--n')
+    let input = prompt("Enter the number of squares (per side)\nMaximum: 100")
+    let n = input === null ? currentNum : input
+    while(n > 100) {
+        alert("Maximum is 100!")
+        input = prompt("Enter the number of squares (per side)\nMaximum: 100")
+        n = input === null ? currentNum : input
+    }
+
+    if(n === currentNum) return
+    else createGrid(n)
+}
+
 container.addEventListener('mouseover', (e) => {
     if(!e.target.classList.contains('square')) return
 
@@ -39,12 +62,6 @@ container.addEventListener('mouseover', (e) => {
     }
 })
 
-editBtn.addEventListener('click', (e) => {
-    let n = prompt("Enter the number of squares (per side)\nMaximum: 100")
-    while(n > 100) {
-        alert("Maximum is 100!")
-        n = prompt("Enter the number of squares (per side)\nMaximum: 100")
-    }
+editBtn.addEventListener('click', () => editGrid())
 
-    createGrid(n)
-})
+cleanBtn.addEventListener('click', () => cleanGrid())
